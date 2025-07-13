@@ -1,0 +1,1 @@
+# swot-segment-insights-agent
