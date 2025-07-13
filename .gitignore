@@ -1,0 +1,18 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Node (future frontend)
+node_modules/
+.next/
+.env.local
+
+# VSCode & OS
+.vscode/
+.DS_Store
+
+# Docker
+*.log
+*.sqlite
