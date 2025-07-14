@@ -60,7 +60,7 @@ const fetchInsight = async () => {
     const text = await res.text();
     try {
       const data = JSON.parse(text);
-      setResponse(data.response || data.error || "No response received.");
+      setResponse(data.choices?.[0]?.message?.content || "No response received.");
     } catch (jsonErr) {
       setResponse(`Invalid JSON: ${jsonErr}`);
     }
