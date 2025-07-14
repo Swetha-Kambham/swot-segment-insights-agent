@@ -51,13 +51,14 @@ export default function HomePage() {
         }),
       });
       const data = await res.json();
-      setResponse(data.response || data.error || "No response received.");
+      console.log(data);
+      setResponse(data.choices?.[0]?.message?.content || "No response received.");
     } catch (err: any) {
       setResponse(`Error: ${err.message || err}`);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   if (authLoading || !user) {
     return <div className="p-6">Loading...</div>;
