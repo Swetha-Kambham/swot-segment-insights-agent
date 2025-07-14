@@ -39,26 +39,38 @@ export default function HomePage() {
     }
   }, [user, authLoading]);
 
-  const fetchInsight = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/swot`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          segment: selectedSegment,
-          category: selectedCategory,
-        }),
-      });
-      const data = await res.json();
-      console.log(data);
-      setResponse(data.choices?.[0]?.message?.content || "No response received.");
-    } catch (err: any) {
-      setResponse(`Error: ${err.message || err}`);
-    } finally {
-      setLoading(false);
+const fetchInsight = async () => {
+  setLoading(true);
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    if (!apiUrl) {
+      throw new Error("API URL not defined in environment variables.");
     }
+
+    const res = await fetch(`${apiUrl}/api/swot`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        segment: selectedSegment,
+        category: selectedCategory,
+      }),
+    });
+
+    const text = await res.text();
+    try {
+      const data = JSON.parse(text);
+      setResponse(data.response || data.error || "No response received.");
+    } catch (jsonErr) {
+      setResponse(`Invalid JSON: ${jsonErr}`);
+    }
+  } catch (err: any) {
+    setResponse(`Error: ${err.message || err}`);
+  } finally {
+    setLoading(false);
   }
+};
+
 
   if (authLoading || !user) {
     return <div className="p-6">Loading...</div>;
