@@ -42,7 +42,7 @@ export default function HomePage() {
   const fetchInsight = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/swot", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/swot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
