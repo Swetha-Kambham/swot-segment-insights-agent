@@ -26,25 +26,26 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
 
-  const fetchInsight = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("http://localhost:8000/api/swot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          segment: selectedSegment,
-          category: selectedCategory,
-        }),
-      });
-      const data = await res.json();
-      setResponse(data.content || "No response received.");
-    } catch (err) {
-      setResponse(`${err} Error fetching insights`);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchInsight = async () => {
+  setLoading(true);
+  try {
+    const res = await fetch("http://localhost:8000/api/swot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        segment: selectedSegment,
+        category: selectedCategory,
+      }),
+    });
+    const data = await res.json();
+    setResponse(data.choices?.[0]?.message?.content || "No response received.");
+  } catch (err) {
+    setResponse(`${err} fetching insights`);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <main className="flex min-h-screen bg-gray-50">
