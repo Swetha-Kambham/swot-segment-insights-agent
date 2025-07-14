@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+
 
 const segments = [
   "Gen Z Creators",
@@ -100,9 +102,10 @@ const fetchInsight = async () => {
         </button>
 
         {/* Response Card */}
-        <div className="mt-6 p-4 bg-white border rounded shadow text-gray-800 whitespace-pre-line">
-          {response}
+        <div className="mt-6 p-4 bg-white border rounded shadow text-gray-800 prose prose-sm max-w-none">
+          <ReactMarkdown>{response}</ReactMarkdown>
         </div>
+
       </section>
     </main>
   );
