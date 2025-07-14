@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-
 
 const segments = [
   "Gen Z Creators",
@@ -23,31 +25,43 @@ const categories = [
 ];
 
 export default function HomePage() {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
   const [selectedSegment, setSelectedSegment] = useState(segments[0]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState("");
 
-const fetchInsight = async () => {
-  setLoading(true);
-  try {
-    const res = await fetch("http://localhost:8000/api/swot", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        segment: selectedSegment,
-        category: selectedCategory,
-      }),
-    });
-    const data = await res.json();
-    setResponse(data.choices?.[0]?.message?.content || "No response received.");
-  } catch (err) {
-    setResponse(`${err} fetching insights`);
-  } finally {
-    setLoading(false);
-  }
-};
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, authLoading]);
 
+  const fetchInsight = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:8000/api/swot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          segment: selectedSegment,
+          category: selectedCategory,
+        }),
+      });
+      const data = await res.json();
+      setResponse(data.response || data.error || "No response received.");
+    } catch (err: any) {
+      setResponse(`Error: ${err.message || err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (authLoading || !user) {
+    return <div className="p-6">Loading...</div>;
+  }
 
   return (
     <main className="flex min-h-screen bg-gray-50">
@@ -105,7 +119,6 @@ const fetchInsight = async () => {
         <div className="mt-6 p-4 bg-white border rounded shadow text-gray-800 prose prose-sm max-w-none">
           <ReactMarkdown>{response}</ReactMarkdown>
         </div>
-
       </section>
     </main>
   );
