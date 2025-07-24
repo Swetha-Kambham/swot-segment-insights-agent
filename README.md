@@ -32,7 +32,7 @@ Backend API: [https://swot-segment-insights-agent-1.onrender.com](https://swot-s
 - FastAPI
 - Python 3.11+
 - Hugging Face Transformers (CardiffNLP model)
-- OpenRouter or Groq API (LLaMA 3)
+- Groq API (LLaMA 3)
 - CORS, Pydantic, Uvicorn
 - Docker + Docker Compose
 - Render (Deployment)
